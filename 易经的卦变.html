@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>易经卦变系统</title>
+    <style>
+        :root {
+            --primary-color: #6d4c41;
+            --secondary-color: #f4e8da;
+            --accent-color: #8b5a2b;
+        }
+
+.gua-card p {
+    font-size: 2.7rem; /* 增加字体大小 */
+    font-weight: bold; /* 加粗显示 */
+}
+
+.gua-card h3 {
+        font-size: 1.3rem;
+    }
+
+.gua-card small {
+   font-size: 1.1rem;    /* 默认约为0.8rem，现在放大到接近正文大小 */
+   line-height: 1.6;      /* 优化行高 */
+    color: var(--accent-color);
+    display: block;
+    margin-top: 0.5rem;
+    font-weight: bold; /* 加粗显示 */
+}
+
+.gua-card small {
+   /* 原有样式保持不变 */
+}
+
+/* 定义数字和卦名之间的距离 */
+.gua-number {
+    color: var(--accent-color);
+    font-size: 1.4rem;
+    margin: 0.5rem 0;  /* 减少上下边距 */
+    text-align: center;
+    font-weight: bold;
+}
+
+.gua-card p {
+    font-size: 2.7rem;
+    font-weight: bold;
+    margin-top: 0.3rem;  /* 新增：减少卦名上方间距 */
+}
+
+/*  */
+        body {
+            font-family: 'SimSun', serif;
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .yao-container {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin: 0.4rem 0;
+            flex-wrap: wrap;
+        }
+
+        .yao {
+            width: 10px;
+            height: 70px;
+            background: var(--accent-color);
+            transition: all 0.3s;
+            position: relative;
+            margin: 5px;
+            border-radius: 3px;
+        }
+
+        .yin {
+            background: linear-gradient(to bottom, 
+                var(--secondary-color) 45%, 
+                var(--accent-color) 45% 55%, 
+                var(--secondary-color) 55%);
+        }
+
+        button {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 1rem 2rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin: 1rem;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+
+        .gua-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .gua-card {
+            background: #fff9f0;
+            border: 1px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg) translateY(0); }
+            25% { transform: rotate(2deg) translateY(-5px); }
+            50% { transform: rotate(-2deg) translateY(5px); }
+            75% { transform: rotate(1deg) translateY(-3px); }
+            100% { transform: rotate(0deg) translateY(0); }
+        }
+
+        .shaking {
+            animation: shake 0.8s infinite;
+        }
+        
+        .blue-font {
+            color: blue;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 style="border-bottom: 2px solid var(--primary-color); ">易经的卦变</h1>
+        <button id="yaoBtn">重新摇卦</button>  <!-- 修改按钮初始文本 -->
+     <div class="yao-container" id="yaoContainer"></div>
+        <div id="resultContainer"></div>
+    </div>
+
+<script>
+
+
+
+
+
+// 页面加载后立即隐藏id="yaoContainer"
+window.onload = function() {
+    document.getElementById("yaoContainer").style.display = "none";
+};
+
+(() => {
+    const guaData = {
+    "111111": {name: "乾☰为  天䷀", text: "元亨利贞。刚健中正，自强不息"},
+    "000000": {name: "坤☷为  地䷁", text: "元亨，利牝马之贞。厚德载物"},
+    "100010": {name: "水☵雷☳ 屯䷂", text: " 刚柔始交而难生"},
+    "010001": {name: "山☶水☵ 蒙䷃", text: "童蒙求我，匪我求童蒙"},
+    "111010": {name: "水☵天☰ 需䷄", text: "云上于天，待时而动"},
+    "010111": {name: "天☰水☵ 讼䷅", text: "天与水违行，慎争戒讼"},
+    "010000": {name: "地☷水☵ 师䷆", text: "刚中而应，行险而顺"},
+    "000010": {name: "水☵地☷ 比䷇", text: "地上有水，亲附和谐"},
+    "111011": {name: "风☴天☰ 小畜䷈", text: "风行天上，密云不雨"},
+    "110111": {name: "天☰泽☱ 履䷉", text: "柔履刚，谨言慎行"},
+    "111000": {name: "地☷天☰ 泰䷊", text: "天地交，小往大来"},
+    "000111": {name: "天☰地☷ 否䷋", text: "天地不交，大往小来"},
+    "101111": {name: "天☰火☲ 同人䷌", text: "天与火，同人于野"},
+    "111101": {name: "火☲天☰ 大有䷍", text: "火在天上，顺天休命"},
+    "001000": {name: "地☷山☶ 谦䷎", text: "地中有山，裒多益寡"},
+    "000100": {name: "雷☳地☷ 豫䷏", text: "雷出地奋，顺时依势"},
+    "100110": {name: "泽☱雷☳ 随䷐", text: "泽中有雷，随时之义"},
+    "011001": {name: "山☶风☴ 蛊䷑", text: "山下有风，振民育德"},
+    "110000": {name: "地☷泽☱ 临䷒", text: "泽上有地，教思无穷"},
+    "000011": {name: "风☴地☷ 观䷓", text: "风行地上，省方观民"},
+    "100101": {name: "火☲雷☳ 噬嗑䷔", text: "雷电合而章，明罚敕法"},
+    "101001": {name: "山☶火☲ 贲䷕", text: "山下有火，文饰光明"},
+    "000001": {name: "山☶地☷ 剥䷖", text: "山附于地，顺势而止"},
+    "100000": {name: "地☷雷☳ 复䷗", text: "雷在地中，反复其道"},
+    "100111": {name: "天☰雷☳ 无妄䷘", text: "天下雷行，物与无妄"},
+    "111001": {name: "山☶天☰ 大畜䷙", text: "天在山中，日新其德"},
+    "100001": {name: "山☶雷☳ 颐䷚", text: "山下有雷，慎言语节饮食"},
+    "011110": {name: "泽☱风☴ 大过䷛", text: "泽灭木，独立不惧"},
+    "010010": {name: "坎☵为   水䷜", text: "水洊至，常德行"},
+    "101101": {name: "离☲为   火䷝", text: "明两作，继明照四方"},
+    "001110": {name: "泽☱山☶ 咸䷞", text: "山上有泽，以虚受人"},
+    "011100": {name: "雷☳风☴ 恒䷟", text: "雷风相与，立不易方"},
+    "001111": {name: "天☰山☶ 遁䷠", text: "天下有山，远小人"},
+    "111100": {name: "雷☳天☰ 大壮䷡", text: "雷在天上，非礼弗履"},
+    "000101": {name: "火☲地☷ 晋䷢", text: "明出地上，自昭明德"},
+    "101000": {name: "地☷火☲ 明夷䷣", text: "明入地中，用晦而明"},
+    "101011": {name: "风☴火☲ 家人䷤", text: "风自火出，言有物行有恒"},
+    "110101": {name: "火☲泽☱ 睽䷥", text: "上火下泽，求同存异"},
+    "001010": {name: "水☵山☶ 蹇䷦", text: "山上有水，反身修德"},
+    "010100": {name: "雷☳水☵ 解䷧", text: "雷雨作，赦过宥罪"},
+    "110001": {name: "山☶泽☱ 损䷨", text: "山下有泽，惩忿窒欲"},
+    "100011": {name: "风☴雷☳ 益䷩", text: "风雷激荡，见善则迁"},
+    "111110": {name: "泽☱天☰ 夬䷪", text: "泽上于天，刚决柔也"},
+    "011111": {name: "天☰风☴ 姤䷫", text: "天下有风，施命诰四方"},
+    "000110": {name: "泽☱地☷ 萃䷬", text: "泽上于地，观其所聚"},
+    "011000": {name: "地☷风☴ 升䷭", text: "地中生木，积小高大"},
+    "010110": {name: "泽☱水☵ 困䷮", text: "泽无水，致命遂志"},
+    "011010": {name: "水☵风☴ 井䷯", text: "木上有水，劳民劝相"},
+    "101110": {name: "泽☱火☲ 革䷰", text: "泽中有火，治历明时"},
+    "011101": {name: "火☲风☴ 鼎䷱", text: "木上有火，正位凝命"},
+    "100100": {name: "震☳为   雷䷲", text: "洊雷，恐惧修省"},
+    "001001": {name: "艮☶为   山䷳", text: "兼山，思不出其位"},
+    "001011": {name: "风☴山☶ 渐䷴", text: "山上有木，进得位"},
+    "110100": {name: "雷☳泽☱ 归妹䷵", text: "泽上有雷，永终知敝"},
+    "101100": {name: "雷☳火☲ 丰䷶", text: "雷电皆至，折狱致刑"},
+    "001101": {name: "火☲山☶ 旅䷷", text: "山上有火，明慎用刑"},
+    "011011": {name: "巽☴为   风䷸", text: "随风，申命行事"},
+    "110110": {name: "兑☱为   泽䷹", text: "丽泽，朋友讲习"},
+    "010011": {name: "风☴水☵ 涣䷺", text: "风行水上，享帝立庙"},
+    "110010": {name: "水☵泽☱ 节䷻", text: "泽上有水，制数度议德行"},
+    "110011": {name: "风☴泽☱ 中孚䷼", text: "泽上有风，议狱缓死"},
+    "001100": {name: "雷☳山☶ 小过䷽", text: "山上有雷，行过乎恭"},
+    "101010": {name: "水☵火☲ 既济䷾", text: "水在火上，思患预防"},
+    "010101": {name: "火☲水☵ 未济䷿", text: "火在水上，慎辨物居方"}
+
+    };
+
+    const GuaCalculator = {
+        ben: gua => gua,
+        cuo: gua => gua.split('').map(b => b === '1' ? '0' : '1').join(''),
+        zong: gua => [...gua].reverse().join(''),
+        hu: gua => (gua.length === 6) ? gua.slice(1,4) + gua.slice(2,5) : gua,
+        // 移除 cuocuo 方法
+    };
+
+    let isAnimating = false;
+
+    function createYao(isYang) {
+        const yao = document.createElement('div');
+        yao.className = `yao ${isYang ? '' : 'yin'}`;
+        return yao;
+    }
+
+    async function startLottery() {
+        if(isAnimating) return;
+        
+        const btn = document.getElementById('yaoBtn');
+        const container = document.getElementById('yaoContainer');
+        
+        isAnimating = true;
+        btn.textContent = '摇卦中...';
+        container.innerHTML = '';
+
+        // 生成动画爻
+        const tempYaos = Array.from({length: 6}, () => {
+            const yao = createYao(Math.random() > 0.5);
+            yao.classList.add('shaking');
+            return yao;
+        });
+        container.append(...tempYaos.reverse());
+
+        // 动画持续时间
+        await new Promise(r => setTimeout(r, 100));
+        
+        // 生成最终卦象
+        const finalGua = Array.from({length: 6}, () => 
+            Math.random() > 0.5 ? '1' : '0').join('');
+        
+        showResult(finalGua);
+        isAnimating = false;
+        btn.textContent = '重新摇卦';
+    }
+
+
+function showResult(baseGua) {
+    const variants = {
+        '本卦': GuaCalculator.ben(baseGua),
+        '综卦': GuaCalculator.zong(baseGua),
+        '错卦': GuaCalculator.cuo(baseGua),
+        '错卦的综卦': GuaCalculator.zong(GuaCalculator.cuo(baseGua)),
+        '互卦': GuaCalculator.hu(baseGua) 
+    };
+
+    // 更新爻象显示
+    const container = document.getElementById('yaoContainer');
+    container.innerHTML = '';
+    container.append(...baseGua.split('').reverse().map(b => createYao(b === '1')));
+
+    // 生成互卦的进一步卦变
+    const huGua = variants['互卦'];
+    const huVariants = {
+        '互卦的综卦': GuaCalculator.zong(huGua),
+        '互卦的错卦': GuaCalculator.cuo(huGua),
+        '互卦的错卦的综卦': GuaCalculator.zong(GuaCalculator.cuo(huGua))
+    };
+
+    // 生成结果卡片
+const resultHTML = `
+<div class="gua-grid">
+    ${Object.entries(variants).map(([name, gua]) => `
+    <div class="gua-card">
+        <h3 class="${name === '本卦' ? 'blue-font' : ''}">${name}</h3>
+        <div class="yao-container">
+            ${gua.split('').reverse().map(b => `
+            <div class="yao ${b === '1' ? '' : 'yin'}"></div>
+            `).join('')}
+        </div>
+        <!-- 新增数字到中间位置 -->
+        <div class="gua-number">6 5 4 3 2 1</div>
+        <p>${guaData[gua]?.name || '未知卦象'}</p>
+        <small>${guaData[gua]?.text || ''}</small>
+    </div>
+    `).join('')}
+    ${Object.entries(huVariants).map(([name, gua]) => `
+    <div class="gua-card">
+        <h3>${name}</h3>
+        <div class="yao-container">
+            ${gua.split('').reverse().map(b => `
+            <div class="yao ${b === '1' ? '' : 'yin'}"></div>
+            `).join('')}
+        </div>
+        <!-- 新增数字到中间位置 -->
+        <div class="gua-number">6 5 4 3 2 1</div>
+        <p>${guaData[gua]?.name || '未知卦象'}</p>
+        <small>${guaData[gua]?.text || ''}</small>
+    </div>
+    `).join('')}
+</div>
+`;
+    // 添加术语说明
+    const explanation = `
+    <div style="margin-top: 2rem; text-align: left; max-width: 650px; margin-inline: auto">
+        <h2 style="border-left: 4px solid var(--accent-color); padding-left: 1rem">卦象术语说明： （3、2、1是内卦，6、5、4是外卦）</h2>
+        <ul style="font-size: 1.3rem;list-style: none; padding: 0">
+            <li><strong>本卦</strong>：当前摇出的原始卦象。</li>
+            <li><strong>综卦</strong>：将本卦爻序完全颠倒形成的卦象（镜像卦）</li>
+            <li><strong>错卦</strong>：将本卦阴阳爻全部取反形成的卦象（阴阳翻转）</li>
+            <li><strong>错卦的综卦</strong>：把错卦爻序完全颠倒形成的卦象</li>
+            <li><strong>互卦</strong>：取本卦2-5爻组成的新卦象（543爻组成上爻，432爻组成下爻）</li>
+            <li><strong>互卦的综卦、错卦及错卦的综卦</strong>：基于互卦进一步生成的卦变</li>
+            <li><strong>天地的变化，可以观测，天1地2定位的两卦，举一反十</strong></li>
+            <li><strong>------</strong></li>
+            <li><strong> 乾为天（☰）、坤为地（☷）、震为雷（☳）、巽为风（☴）</strong></li>
+            <li><strong> 坎为水（☵）、离为火（☲）、艮为山（☶）、兑为泽（☱）</strong></li>
+        </ul>
+        <small style="color: var(--accent-color); display: block; margin-top: 1rem;font-size: 1.1rem;  ">
+            注：错卦的错卦即恢复原卦，故未单独列出
+        </small>
+    </div>
+    `;
+
+    document.getElementById('resultContainer').innerHTML = resultHTML + explanation; // 追加说明
+}
+
+    // 在DOM加载完成后自动执行一次摇卦
+    document.addEventListener('DOMContentLoaded', function() {
+        startLottery();
+    });
+    document.getElementById('yaoBtn').addEventListener('click', startLottery);
+
+})();
+
+
+
+</script>
+</body>
+</html>
