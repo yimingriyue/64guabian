@@ -33,7 +33,7 @@
 
 >易经杂说：综卦可以称之为反对的或相对的，错卦可称之为正对的。
 
-![先天八卦图](https://github.com/yimingriyue/64guabian/blob/main/img/xiantianbagua.png)
+![先天八卦图](https://github.com/yimingriyue/64guabian/blob/main/img/bagua.png)
 
 
 >天地没有隐藏自身变化，可以观测。
