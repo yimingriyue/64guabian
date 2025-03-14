@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
+
+
 <head>
     <meta charset="UTF-8">
-    <title>易经卦变系统</title>
+    <title>易经的卦变</title>
     <style>
         :root {
             --primary-color: #6d4c41;
@@ -35,7 +38,7 @@
 /* 定义数字和卦名之间的距离 */
 .gua-number {
     color: var(--accent-color);
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     margin: 0.5rem 0;  /* 减少上下边距 */
     text-align: center;
     font-weight: bold;
@@ -132,16 +135,62 @@
             color: blue;
         }
         
+        
+        
+/* 新增背景点击反馈 */
+body {
+    cursor: pointer; /* 整个页面显示可点击手势 */
+}
+
+/* 排除容器区域的点击样式 */
+.container {
+    cursor: default; /* 容器内恢复默认光标 */
+    position: relative; /* 建立新的层叠上下文 */
+    z-index: 1;
+    background: var(--secondary-color); /* 保持背景色一致 */
+    padding: 20px; /* 保持原有内边距 */
+}
+
+/* 为标题添加点击反馈效果 */
+h1 {
+    transition: transform 0.2s;
+}
+h1:active {
+    transform: scale(0.98);
+}        
+        
+/* 添加标题变量 */        
+
+
+#guaTitle:hover {
+    color: var(--primary-color);
+}       
+       
+       
+       
+       
+      #yaoBtn {
+    font-size: 1.6em;  /* 两倍大小 */
+}     
+        /* 新增样式以调整布局 */
+        .button-container {
+            text-align: center;
+        }            
+        
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1 style="border-bottom: 2px solid var(--primary-color); ">易经的卦变</h1>
-        <button id="yaoBtn">重新摇卦</button>  <!-- 修改按钮初始文本 -->
-     <div class="yao-container" id="yaoContainer"></div>
-        <div id="resultContainer"></div>
-    </div>
+<div class="container">
+    <h1 id="guaTitle" style="border-bottom: 1px solid var(--primary-color);font-size: 2.5em;">易经的卦变</h1>
+    <button id="yaoBtn">重新摇卦</button>
+    <div class="yao-container" id="yaoContainer"></div>
+    <div id="resultContainer"></div>
+</div>
+
+
+
+
 
 <script>
 
@@ -328,6 +377,8 @@ const resultHTML = `
     // 添加术语说明
     const explanation = `
     <div style="margin-top: 2rem; text-align: left; max-width: 650px; margin-inline: auto">
+
+    
         <h2 style="border-left: 4px solid var(--accent-color); padding-left: 1rem">卦象术语说明： （3、2、1是内卦，6、5、4是外卦）</h2>
         <ul style="font-size: 1.3rem;list-style: none; padding: 0">
             <li><strong>本卦</strong>：当前摇出的原始卦象。</li>
@@ -336,14 +387,30 @@ const resultHTML = `
             <li><strong>错卦的综卦</strong>：把错卦爻序完全颠倒形成的卦象</li>
             <li><strong>互卦</strong>：取本卦2-5爻组成的新卦象（543爻组成上爻，432爻组成下爻）</li>
             <li><strong>互卦的综卦、错卦及错卦的综卦</strong>：基于互卦进一步生成的卦变</li>
-            <li><strong>天地的变化，可以观测，天1地2定位的两卦，举一反十</strong></li>
-            <li><strong>------</strong></li>
-            <li><strong> 乾为天（☰）、坤为地（☷）、震为雷（☳）、巽为风（☴）</strong></li>
-            <li><strong> 坎为水（☵）、离为火（☲）、艮为山（☶）、兑为泽（☱）</strong></li>
+            <li><strong>------</strong></li>            
+            <li><strong>天地没有隐藏自身变化，可以观测。</strong></li>
+            <li><strong>天一地二，上下定位的两卦，训练脑子自行举一反十</strong></li>
         </ul>
         <small style="color: var(--accent-color); display: block; margin-top: 1rem;font-size: 1.1rem;  ">
             注：错卦的错卦即恢复原卦，故未单独列出
         </small>
+
+         <ul style="font-size: 3rem;list-style: none; padding: 0">
+            <li><strong> 乾为天（☰）、坤为地（☷）</strong></li>    
+            <li><strong> 坎为水（☵）、离为火（☲）</strong></li>       
+            <li><strong> 震为雷（☳）、巽为风（☴）</strong></li>
+            <li><strong> 艮为山（☶）、兑为泽（☱）</strong></li>
+        </ul>
+
+         <ul style="font-size: 3rem;list-style: none; padding: 0">
+            <li><strong> 《说卦传》：</strong></li>           
+            <li><strong> 天地定位。山泽通气。</strong></li>
+            <li><strong> 雷风相薄。水火不相射。</strong></li>
+            <li><strong> 八卦相错。</strong></li>
+        </ul>
+
+        
+
     </div>
     `;
 
@@ -356,10 +423,28 @@ const resultHTML = `
     });
     document.getElementById('yaoBtn').addEventListener('click', startLottery);
 
+// 在原有代码基础上添加以下内容
+document.getElementById('guaTitle').addEventListener('click', startLottery);
+
+
+    // 添加点击空白处重新摇卦的功能
+    document.body.addEventListener('click', function(event) {
+        if (!event.target.closest('.container')) {
+            startLottery();
+        }
+
+    });
+
+
+
 })();
 
 
 
 </script>
+
+
+
+
 </body>
 </html>
