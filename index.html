@@ -140,6 +140,7 @@
 /* 新增背景点击反馈 */
 body {
     cursor: pointer; /* 整个页面显示可点击手势 */
+    min-height: 100vh;
 }
 
 /* 排除容器区域的点击样式 */
@@ -147,8 +148,7 @@ body {
     cursor: default; /* 容器内恢复默认光标 */
     position: relative; /* 建立新的层叠上下文 */
     z-index: 1;
-    background: var(--secondary-color); /* 保持背景色一致 */
-    padding: 20px; /* 保持原有内边距 */
+    background: v0px; /* 保持原有内边距 */
 }
 
 /* 为标题添加点击反馈效果 */
@@ -175,6 +175,7 @@ h1:active {
         /* 新增样式以调整布局 */
         .button-container {
             text-align: center;
+            margin-top: 2rem;
         }            
         
     </style>
@@ -392,12 +393,24 @@ const resultHTML = `
             <li><strong>天一地二，上下定位的两卦，训练脑子自行举一反十</strong></li>
         </ul>
         <small style="color: var(--accent-color); display: block; margin-top: 1rem;font-size: 1.1rem;  ">
-            注：错卦的错卦即恢复原卦，故未单独列出
+            --------------
         </small>
-
+        
+                <ul style="font-size: 1.3rem;list-style: none; padding: 0">
+            <li>天再怎么转变还是天☰，地再怎么转变还是地☷</li>
+            <li>水再怎么转变还是水☵，火再怎么转变还是火☲</li>
+            <li>雷☳一转变就成了山☶，风☴一转变就成了泽☱</li>
+        <small style="color: var(--accent-color); display: block; margin-top: 1rem;font-size: 1.1rem;  ">
+            --------------
+        </small>
+            <li>相关成语：气势磅礴、遗风余泽</li>
+            <li>雷和山都有势能，风里泽里都有混杂万物</li>           
+        </ul>
+        
+        
          <ul style="font-size: 3rem;list-style: none; padding: 0">
-            <li><strong> 乾为天（☰）、坤为地（☷）</strong></li>    
-            <li><strong> 坎为水（☵）、离为火（☲）</strong></li>       
+            <li><strong> 乾为天（☰）、坤为地（☷）</strong></li> 
+            <li><strong> 坎为水（☵）、离为火（☲）</strong></li>          
             <li><strong> 震为雷（☳）、巽为风（☴）</strong></li>
             <li><strong> 艮为山（☶）、兑为泽（☱）</strong></li>
         </ul>
@@ -411,7 +424,6 @@ const resultHTML = `
 
         
 
-    </div>
     `;
 
     document.getElementById('resultContainer').innerHTML = resultHTML + explanation; // 追加说明
