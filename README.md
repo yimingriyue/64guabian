@@ -13,6 +13,9 @@
 |互卦的错卦（水☵火☲ 既济䷾）||
 |互卦的错卦的综卦（火☲水☵ 未济䷿）||
 
+
+![先天八卦图](https://github.com/yimingriyue/64guabian/blob/main/xiantianbagua.png)
+
 >天地没有隐藏自身变化，可以观测。
 >>天一地二，上下定位的两卦，
 >>>训练脑子自行举一反十。
