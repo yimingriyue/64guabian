@@ -323,8 +323,8 @@ window.onload = function() {
 function showResult(baseGua) {
     const variants = {
         '本卦': GuaCalculator.ben(baseGua),
-        '综卦': GuaCalculator.zong(baseGua),
-        '错卦': GuaCalculator.cuo(baseGua),
+        '综卦（转变）': GuaCalculator.zong(baseGua),
+        '错卦（质变）': GuaCalculator.cuo(baseGua),
         '错卦的综卦': GuaCalculator.zong(GuaCalculator.cuo(baseGua)),
         '互卦': GuaCalculator.hu(baseGua) 
     };
