@@ -359,7 +359,7 @@ function showResult(baseGua) {
         '综卦（转变）': GuaCalculator.zong(baseGua),
         '错卦（质变）': GuaCalculator.cuo(baseGua),
         '错卦的综卦': GuaCalculator.zong(GuaCalculator.cuo(baseGua)),
-        '互卦': GuaCalculator.hu(baseGua) 
+        '本卦的互卦': GuaCalculator.hu(baseGua) 
     };
 
     // 更新爻象显示
@@ -368,7 +368,7 @@ function showResult(baseGua) {
     container.append(...baseGua.split('').reverse().map(b => createYao(b === '1')));
 
     // 生成互卦的进一步卦变
-    const huGua = variants['互卦'];
+    const huGua = variants['本卦的互卦'];
     const huVariants = {
         '互卦的综卦': GuaCalculator.zong(huGua),
         '互卦的错卦': GuaCalculator.cuo(huGua),
@@ -381,7 +381,7 @@ function showResult(baseGua) {
         ${Object.entries(variants).map(([name, gua]) => `
         <div class="gua-card">
             <h3 class="${name === '本卦' ? 'blue-font' : ''}">${name}</h3>
-            ${name === '互卦' ? '<div class="gua-source">5 4 3外卦、4 3 2内卦</div>' : ''}
+            ${name === '本卦的互卦' ? '<div class="gua-source">5 4 3外卦、4 3 2内卦</div>' : ''}
             <div class="yao-container">
                 ${gua.split('').reverse().map(b => `
                 <div class="yao ${b === '1' ? '' : 'yin'}"></div>
