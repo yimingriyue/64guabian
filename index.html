@@ -57,4 +57,34 @@ w.addEventListener('mousedown', (e) => {
     document.addEventListener('mousemove', moveHandler);
     document.addEventListener('mouseup', upHandler);
 });
+
+// 添加触摸事件支持（手机触控旋转）
+w.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    d = true;
+    p = h(w);
+    const center = c(w);
+    const touch = e.touches[0];
+    const startAngle = f(center, {x: touch.clientX, y: touch.clientY});
+    w.classList.add('grabbing');
+    
+    function touchMoveHandler(e) {
+        if (!d) return;
+        const touch = e.touches[0];
+        const currentAngle = f(center, {x: touch.clientX, y: touch.clientY});
+        const angleDiff = currentAngle - startAngle;
+        w.style.transform = `rotate(${p + angleDiff}deg)`;
+        u = p + angleDiff;
+    }
+    
+    function touchEndHandler() {
+        d = false;
+        w.classList.remove('grabbing');
+        document.removeEventListener('touchmove', touchMoveHandler);
+        document.removeEventListener('touchend', touchEndHandler);
+    }
+    
+    document.addEventListener('touchmove', touchMoveHandler);
+    document.addEventListener('touchend', touchEndHandler);
+}, { passive: false });
 </script>
